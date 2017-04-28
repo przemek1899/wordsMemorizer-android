@@ -20,16 +20,19 @@ public class WordsMemorizerDatabase extends SQLiteOpenHelper {
     private static final String LANGUAGE_TABLE_CREATE =
             "CREATE TABLE " + LANGUAGE_TABLE_NAME + " (" +
                     LanguageReader.LanguageEntry._ID + " INTEGER PRIMARY KEY," +
-                    LanguageReader.LanguageEntry.COLUMN_LANGUAGE_NAME + " TEXT NOT NULL);";
+                    LanguageReader.LanguageEntry.COLUMN_LANGUAGE_NAME + " TEXT UNIQUE NOT NULL);";
 
     private static final String GROUP_TABLE_NAME = "groups";
     private static final String GROUP_TABLE_CREATE =
             "CREATE TABLE " + GROUP_TABLE_NAME + " (" +
                     GroupReader.GroupEntry._ID + " INTEGER PRIMARY KEY," +
                     GroupReader.GroupEntry.COLUMN_LANGUAGE_ID_NAME + " INTEGER NOT NULL," +
+                    GroupReader.GroupEntry.COLUMN_PARENT_GROUP_ID_NAME + " INTEGER," +
                     GroupReader.GroupEntry.COLUMN_GROUP_NAME + " TEXT NOT NULL," +
                     "FOREIGN KEY(" + GroupReader.GroupEntry.COLUMN_LANGUAGE_ID_NAME +
-                    ") REFERENCES " + LANGUAGE_TABLE_NAME + "(" + LanguageReader.LanguageEntry._ID + ") );";
+                    ") REFERENCES " + LANGUAGE_TABLE_NAME + "(" + LanguageReader.LanguageEntry._ID + "),"+
+                    "FOREIGN KEY(" + GroupReader.GroupEntry.COLUMN_PARENT_GROUP_ID_NAME +
+                    ") REFERENCES " + GROUP_TABLE_NAME + "(" + GroupReader.GroupEntry._ID + "));";
 
     private static final String EXPRESSION_TABLE_NAME = "expressions";
     private static final String EXPRESSION_TABLE_CREATE =

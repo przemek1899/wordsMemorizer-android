@@ -30,6 +30,7 @@
         android:layout_alignLeft="@+id/button"
         android:layout_alignStart="@+id/button"
         android:layout_marginTop="28dp"
+        android:onClick="addGroupDialog"
         android:id="@+id/button3" />
 
     <Button
@@ -40,5 +41,6 @@
         android:layout_alignLeft="@+id/button3"
         android:layout_alignStart="@+id/button3"
         android:layout_marginTop="29dp"
+        android:onClick="addExpressionDialog"
         android:id="@+id/button4" />
 </RelativeLayout>
