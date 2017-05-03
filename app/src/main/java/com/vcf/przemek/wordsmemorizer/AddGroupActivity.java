@@ -1,16 +1,25 @@
 package com.vcf.przemek.wordsmemorizer;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
+import com.vcf.przemek.wordsmemorizer.constants.Language;
 import com.vcf.przemek.wordsmemorizer.db.GroupReader;
+import com.vcf.przemek.wordsmemorizer.db.LanguageReader;
 import com.vcf.przemek.wordsmemorizer.db.WordsMemorizerDatabase;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class AddGroupActivity extends AppCompatActivity {
 
@@ -18,17 +27,55 @@ public class AddGroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group);
+
+        populateLanguageSpinner();
     }
 
     private void populateLanguageSpinner() {
         Spinner spinner = (Spinner) findViewById(R.id.language_spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-//                R.array.planets_array, android.R.layout.simple_spinner_item);
-//        // Specify the layout to use when the list of choices appears
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        // Apply the adapter to the spinner
-//        spinner.setAdapter(adapter);
+        List<String> langStringArray = getLangData();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, langStringArray);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+    }
+
+    private List<String> getLangData(){
+        Cursor c = getLangCursor();
+        List<String> list = new ArrayList<String>();
+        if (c != null) {
+            if (c.moveToFirst()) {
+                do {
+                    String lang_name = c.getString(c.getColumnIndex(LanguageReader.LanguageEntry.COLUMN_LANGUAGE_NAME));
+                    list.add(lang_name);
+                } while (c.moveToNext());
+            }
+        }
+        return list;
+    }
+
+    public Cursor getLangCursor() {
+
+        WordsMemorizerDatabase dbHelper = new WordsMemorizerDatabase(getApplicationContext());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = {
+                LanguageReader.LanguageEntry._ID,
+                LanguageReader.LanguageEntry.COLUMN_LANGUAGE_NAME
+        };
+
+        String sortOrder = LanguageReader.LanguageEntry.COLUMN_LANGUAGE_NAME + " DESC";
+
+        Cursor cursor = db.query(
+                LanguageReader.LanguageEntry.TABLE_NAME,                     // The table to query
+                projection,                               // The columns to return
+                null, //selection,                                // The columns for the WHERE clause
+                null, //selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+        return cursor;
     }
 
     public void saveNewGroup(View v) {
@@ -38,23 +85,68 @@ public class AddGroupActivity extends AppCompatActivity {
 
         EditText group_name_edit_text = (EditText) findViewById(R.id.group_input);
         String group_name = group_name_edit_text.getText().toString();
-//        insertGroup(group_name, Integer language_id);
+
+        Integer lang_id = getLanguageId(language);
+        if (lang_id > 0){
+            insertGroup(group_name, lang_id);
+        }
+        else{
+            showAlertDialog("Wystąpił błąd", "Nie udało się dodać grupy.");
+        }
+    }
+
+    private Integer getLanguageId(String language_name){
+        WordsMemorizerDatabase dbHelper = new WordsMemorizerDatabase(getApplicationContext());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = {
+                LanguageReader.LanguageEntry._ID
+        };
+
+        // Filter results WHERE "title" = 'My Title'
+        String selection = LanguageReader.LanguageEntry.COLUMN_LANGUAGE_NAME + " = ?";
+        String[] selectionArgs = { language_name };
+
+        Cursor c = db.query(
+                LanguageReader.LanguageEntry.TABLE_NAME,   // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                      // The sort order
+        );
+
+        Integer id = -1;
+        if (c != null) {
+            if (c.getCount() > 1){
+                // TODO raise/throw excepetion
+            }
+            if (c.moveToFirst()) {
+                id = c.getInt(c.getColumnIndex(LanguageReader.LanguageEntry._ID));
+            }
+        }
+        c.close();
+        return id;
     }
 
     private long insertGroup(String name, Integer language_id) {
         WordsMemorizerDatabase dbHelper = new WordsMemorizerDatabase(getApplicationContext());
 
-        // Gets the data repository in write mode
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(GroupReader.GroupEntry.COLUMN_GROUP_NAME, name);
         values.put(GroupReader.GroupEntry.COLUMN_LANGUAGE_ID_NAME, language_id);
-//        values.put(GroupReader.GroupEntry.COLUMN_GROUP_NAME, null);
 
-        // Insert the new row, returning the primary key value of the new row
         long newRowId = db.insert(GroupReader.GroupEntry.TABLE_NAME, null, values);
         return newRowId;
+    }
+
+    public void showAlertDialog(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
     }
 }

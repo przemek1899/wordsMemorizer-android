@@ -47,9 +47,10 @@ public class WordsMemorizerDatabase extends SQLiteOpenHelper {
             "CREATE TABLE " + EXPRESSION_GROUP_TABLE_NAME + " (" +
                     ExpressionGroupReader.ExpressionGroupEntry._ID + " INTEGER PRIMARY KEY," +
                     ExpressionGroupReader.ExpressionGroupEntry.COLUMN_EXPRESSION_ID_NAME + " INTEGER NOT NULL," +
+                    ExpressionGroupReader.ExpressionGroupEntry.COLUMN_GROUP_ID_NAME + " INTEGER NOT NULL," +
+
                     "FOREIGN KEY(" + ExpressionGroupReader.ExpressionGroupEntry.COLUMN_EXPRESSION_ID_NAME +
                     ") REFERENCES " + EXPRESSION_TABLE_NAME + "(" + ExpressionReader.ExpressionEntry._ID + ")," +
-                    ExpressionGroupReader.ExpressionGroupEntry.COLUMN_GROUP_ID_NAME + " INTEGER NOT NULL," +
                     "FOREIGN KEY(" + ExpressionGroupReader.ExpressionGroupEntry.COLUMN_GROUP_ID_NAME +
                     ") REFERENCES " + GROUP_TABLE_NAME + "(" + GroupReader.GroupEntry._ID + "));";
 
