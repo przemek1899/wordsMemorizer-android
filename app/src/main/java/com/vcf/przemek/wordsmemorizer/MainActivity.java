@@ -31,17 +31,20 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.group_view:
-//                showInsulinReservoirDialog();
+                showGroupListActivity();
                 return true;
 
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
+    public void showGroupListActivity(){
+        Intent intent = new Intent(this, GroupViewActivity.class);
+        startActivity(intent);
+    }
 
     public void addGroupDialog(View v){
         Intent intent = new Intent(this, AddGroupActivity.class);

@@ -53,14 +53,17 @@
         android:layout_marginTop="59dp"
         android:id="@+id/example_input" />
 
-    <ImageButton
+    <Button
+        android:text="Gotowe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/add_icon"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="13dp"
         android:onClick="saveExpression"
-        android:id="@+id/save_expression_button" />
+        android:id="@+id/button2" />
 
 </RelativeLayout>

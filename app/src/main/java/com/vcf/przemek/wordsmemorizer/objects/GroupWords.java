@@ -16,6 +16,11 @@ public class GroupWords {
         this.language_id = language_id;
     }
 
+    @Override
+    public String toString(){
+        return this.name;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -9,20 +9,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vcf.przemek.wordsmemorizer.R;
-import com.vcf.przemek.wordsmemorizer.objects.GroupWords;
-
+import com.vcf.przemek.wordsmemorizer.objects.Expression;
 
 /**
- * Created by Przemek on 2017-05-03.
+ * Created by Przemek on 2017-05-07.
  */
 
-public class SpinnerGroupAdapter extends ArrayAdapter<GroupWords> {
+public class ExpressionListAdapter extends ArrayAdapter<Expression> {
 
     private final Context context;
-    //    private final String[] values;
-    private final GroupWords[] values;
+    private final Expression[] values;
 
-    public SpinnerGroupAdapter(Context context, GroupWords[] values) {
+    public ExpressionListAdapter(Context context, Expression[] values) {
         super(context, -1, values);
         this.context = context;
         this.values = values;
@@ -33,12 +31,15 @@ public class SpinnerGroupAdapter extends ArrayAdapter<GroupWords> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rowView = inflater.inflate(R.layout.spinner_group_view, parent, false);
+        View rowView = inflater.inflate(R.layout.expression_list, parent, false);
 
-        TextView placeView = (TextView) rowView.findViewById(R.id.group_name_entry);
-        placeView.setText(values[position].getName());
+        TextView keyView = (TextView) rowView.findViewById(R.id.key_entry);
+        keyView.setText(values[position].getKey());
 
-        rowView.setTag(values[position].getId());
+        TextView translationView = (TextView) rowView.findViewById(R.id.translation_entry);
+        translationView.setText(values[position].getTranslation());
+
+        rowView.setTag(values[position].getID());
         return rowView;
     }
 }

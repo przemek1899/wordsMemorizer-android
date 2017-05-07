@@ -15,6 +15,7 @@ public class ExpressionReader {
         public static final String COLUMN_KEY_NAME = "key";
         public static final String COLUMN_TRANSLATION_NAME = "translation";
         public static final String COLUMN_EXAMPLE_NAME = "example";
+        public static final String COLUMN_CREATION_DATE = "creation_date";
 
     }
 }

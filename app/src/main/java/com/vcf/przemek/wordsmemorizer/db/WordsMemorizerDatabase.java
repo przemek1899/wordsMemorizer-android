@@ -40,7 +40,8 @@ public class WordsMemorizerDatabase extends SQLiteOpenHelper {
                     ExpressionReader.ExpressionEntry._ID + " INTEGER PRIMARY KEY," +
                     ExpressionReader.ExpressionEntry.COLUMN_KEY_NAME + " TEXT NOT NULL," +
                     ExpressionReader.ExpressionEntry.COLUMN_TRANSLATION_NAME + " TEXT," +
-                    ExpressionReader.ExpressionEntry.COLUMN_EXAMPLE_NAME + " TEXT);";
+                    ExpressionReader.ExpressionEntry.COLUMN_EXAMPLE_NAME + " TEXT," +
+                    ExpressionReader.ExpressionEntry.COLUMN_CREATION_DATE + " INTEGER NOT NULL);";
 
     private static final String EXPRESSION_GROUP_TABLE_NAME = "expression_group";
     private static final String EXPRESSION_GROUP_TABLE_CREATE =

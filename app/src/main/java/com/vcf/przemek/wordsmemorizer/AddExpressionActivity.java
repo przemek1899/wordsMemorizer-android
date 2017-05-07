@@ -20,6 +20,7 @@ import com.vcf.przemek.wordsmemorizer.db.WordsMemorizerDatabase;
 import com.vcf.przemek.wordsmemorizer.objects.GroupWords;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AddExpressionActivity extends AppCompatActivity {
@@ -58,6 +59,7 @@ public class AddExpressionActivity extends AppCompatActivity {
                 } while (c.moveToNext());
             }
         }
+        c.close();
         return list;
     }
 
@@ -128,6 +130,7 @@ public class AddExpressionActivity extends AppCompatActivity {
         values.put(ExpressionReader.ExpressionEntry.COLUMN_KEY_NAME, expression);
         values.put(ExpressionReader.ExpressionEntry.COLUMN_TRANSLATION_NAME, translation);
         values.put(ExpressionReader.ExpressionEntry.COLUMN_EXAMPLE_NAME, example);
+        values.put(ExpressionReader.ExpressionEntry.COLUMN_CREATION_DATE, new Date().getTime());
 
         long newRowId = db.insert(ExpressionReader.ExpressionEntry.TABLE_NAME, null, values);
 
