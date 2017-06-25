@@ -56,4 +56,26 @@
         android:layout_below="@+id/button"
         android:layout_alignLeft="@+id/button"
         android:layout_alignStart="@+id/button" />
+
+    <Button
+        android:text="test api"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button4"
+        android:layout_alignLeft="@+id/button4"
+        android:layout_alignStart="@+id/button4"
+        android:layout_marginTop="41dp"
+        android:onClick="testApi"
+        android:id="@+id/button7" />
+
+    <Button
+        android:text="authUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button7"
+        android:layout_alignLeft="@+id/button7"
+        android:layout_alignStart="@+id/button7"
+        android:layout_marginTop="29dp"
+        android:onClick="authUser"
+        android:id="@+id/button8" />
 </RelativeLayout>

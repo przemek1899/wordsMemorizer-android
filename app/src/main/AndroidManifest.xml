@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vcf.przemek.wordsmemorizer">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -18,7 +20,10 @@
         </activity>
         <activity android:name=".AddGroupActivity" />
         <activity android:name=".AddExpressionActivity" />
-        <activity android:name=".GroupViewActivity"></activity>
+        <activity android:name=".GroupViewActivity" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>

@@ -4,4 +4,7 @@
     <item
         android:id="@+id/group_view"
         android:title="Przeglądaj grupy"/>
+    <item
+        android:id="@+id/app_settings"
+        android:title="Ustawienia"/>
 </menu>
