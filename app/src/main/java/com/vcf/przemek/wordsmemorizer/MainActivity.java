@@ -7,21 +7,28 @@ import android.preference.SwitchPreference;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v7.widget.Toolbar;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.vcf.przemek.wordsmemorizer.custom_oauth.CustomOAuthToken;
+import com.vcf.przemek.wordsmemorizer.custom_oauth.CustomVolleyAuthRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -106,40 +113,68 @@ public class MainActivity extends AppCompatActivity {
         return url;
     }
 
+    String client_id = "duvSyUXo6Byjv3IS60v163rpmxhAoO0XUOXdkLc6";
+    String client_secret = "hgTUHimIiC0CbEgOtmnPGNzjmM0f0CF3Kfz47GdY7eO7jrkn5NF6E5BDgDqgVH5vM2c3wc7WMWhIWMmuGGCBELRSduDKHUT874IRAnC6RRvk9zDgS8NmKRWVvCg18ppk";
+
+    String client_id_2 = "77sxCComSu0vriJx1tu2LsyNKU3Z1s9o0FJIybcE";
+    String client_secret_2 = "client_secret:iKpABZIlIlKFXMuHZjtLacPwyEzObAo4UkQBTlmzUWlr5zs9ZajrabkJVviNRUQYCHT5oM52O0VQyiDTo0frC3443m7hriD3gyEre89L2Q5cuP4maHlYSOYpKHxkRhEp";
+
+
+    public String getAuthCredentials(){
+        SharedPreferences settings = getSharedPreferences(getDefaultSharedPreferencesName(this), 0);
+
+        boolean use_credentials_2 = settings.getBoolean("use_credentials_2", false);
+
+        if (use_credentials_2){
+            return client_id_2 + ":" + client_secret_2;
+        }
+        return client_id + ":" + client_secret;
+    }
+
+    private void saveAuthonticationToken(JSONObject response){
+        CustomOAuthToken token = CustomOAuthToken.getInstance();
+        try{
+            token.setAccess_token(response.getString("access_token"));
+            token.setAccess_token(response.getString("token_type"));
+            token.setAccess_token(response.getString("expires_in"));
+            token.setAccess_token(response.getString("scope"));
+            token.setAccess_token(response.getString("refresh_token"));
+        }
+        catch (JSONException e){
+
+        }
+    }
+
     public void authUser(View v){
         // Get a RequestQueue
         RequestQueue queue = RequestQueueSingleton.getInstance(this.getApplicationContext()).
                 getRequestQueue();
 
         String url = getPrefixURL() + "o/token/";
-        JSONObject json_params = new JSONObject();
-        try {
-            json_params.put("grant_type", "password");
-            json_params.put("username", "dom");
-            json_params.put("password", "kazik1916");
-            json_params.put("duvSyUXo6Byjv3IS60v163rpmxhAoO0XUOXdkLc6",
-                    "hgTUHimIiC0CbEgOtmnPGNzjmM0f0CF3Kfz47GdY7eO7jrkn5NF6E5BDgDqgVH5vM2c3wc7WMWhIWMmuGGCBELRSduDKHUT874IRAnC6RRvk9zDgS8NmKRWVvCg18ppk");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, url, json_params,
+        Map<String, String> params = new HashMap<>();
+        params.put("grant_type", "password");
+        params.put("username", "dom");
+        params.put("password", "kazik1916");
+
+        CustomVolleyAuthRequest customRequest = new CustomVolleyAuthRequest(
+                Request.Method.POST, url, params, getAuthCredentials(),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // Do something with the response
-                        showResponse("Response", response.toString());
+                        //showResponse("Response: ", response.toString());
+                        saveAuthonticationToken(response);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle error
+                    public void onErrorResponse(VolleyError response)
+                    {
+                        showResponse("Response: Error", response.toString());
                     }
-                });
-
-        // Add a request (in this example, called stringRequest) to your RequestQueue.
-        RequestQueueSingleton.getInstance(this).addToRequestQueue(stringRequest);
+                }
+        );
+        RequestQueueSingleton.getInstance(this).addToRequestQueue(customRequest);
     }
 
     public void testApi(View v) {

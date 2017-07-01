@@ -6,6 +6,12 @@
         android:summary="@string/pref_description_social_recommendations"
         android:title="@string/pref_title_social_recommendations" />
 
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="use_credentials_2"
+        android:summary="@string/pref_title_use_credentials_2"
+        android:title="@string/pref_description_use_credentials_2" />
+
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     <EditTextPreference

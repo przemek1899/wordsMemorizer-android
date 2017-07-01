@@ -11,6 +11,11 @@
     <string name="pref_description_social_recommendations">Send requests over TSL protocol
     </string>
 
+    <string name="pref_title_use_credentials_2">2 credentials</string>
+    <string name="pref_description_use_credentials_2">Use second credentials
+    </string>
+
+
     <string name="pref_title_display_name">Host ip</string>
     <string name="pref_default_display_name">192.168.1.4</string>
 
