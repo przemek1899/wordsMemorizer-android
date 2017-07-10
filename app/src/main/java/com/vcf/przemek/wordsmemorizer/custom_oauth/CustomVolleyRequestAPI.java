@@ -24,7 +24,7 @@ public class CustomVolleyRequestAPI extends Request<JSONObject> {
 
     private Response.Listener<JSONObject> listener;
     private Map<String, String> params;
-    private String credentials;
+    private String oauth_token;
 
     public CustomVolleyRequestAPI(String url, Map<String, String> params,
                                    Response.Listener<JSONObject> reponseListener, Response.ErrorListener errorListener) {
@@ -33,20 +33,20 @@ public class CustomVolleyRequestAPI extends Request<JSONObject> {
         this.params = params;
     }
 
-    public CustomVolleyRequestAPI(int method, String url, Map<String, String> params, String credentials,
+    public CustomVolleyRequestAPI(int method, String url, Map<String, String> params, String oauth_token,
                                    Response.Listener<JSONObject> reponseListener, Response.ErrorListener errorListener) {
         super(method, url, errorListener);
         this.listener = reponseListener;
         this.params = params;
-        this.credentials = credentials;
+        this.oauth_token = oauth_token;
     }
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         Map<String, String> headers = new HashMap<>();
-        String auth = "Bearer "
-                + Base64.encodeToString(this.credentials.getBytes(), Base64.NO_WRAP);
-        headers.put("Content-Type", "application/x-www-form-urlencoded");
+        String auth = "Bearer " + this.oauth_token;
+//                + Base64.encodeToString(this.oauth_token.getBytes(), Base64.NO_WRAP);
+//        headers.put("Content-Type", "application/x-www-form-urlencoded");
         headers.put("Authorization", auth);
         return headers;
     }

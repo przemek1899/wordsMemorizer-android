@@ -23,6 +23,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.vcf.przemek.wordsmemorizer.custom_oauth.CustomOAuthToken;
 import com.vcf.przemek.wordsmemorizer.custom_oauth.CustomVolleyAuthRequest;
+import com.vcf.przemek.wordsmemorizer.custom_oauth.CustomVolleyRequestAPI;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
     String client_secret = "hgTUHimIiC0CbEgOtmnPGNzjmM0f0CF3Kfz47GdY7eO7jrkn5NF6E5BDgDqgVH5vM2c3wc7WMWhIWMmuGGCBELRSduDKHUT874IRAnC6RRvk9zDgS8NmKRWVvCg18ppk";
 
     String client_id_2 = "77sxCComSu0vriJx1tu2LsyNKU3Z1s9o0FJIybcE";
-    String client_secret_2 = "client_secret:iKpABZIlIlKFXMuHZjtLacPwyEzObAo4UkQBTlmzUWlr5zs9ZajrabkJVviNRUQYCHT5oM52O0VQyiDTo0frC3443m7hriD3gyEre89L2Q5cuP4maHlYSOYpKHxkRhEp";
+    String client_secret_2 = "iKpABZIlIlKFXMuHZjtLacPwyEzObAo4UkQBTlmzUWlr5zs9ZajrabkJVviNRUQYCHT5oM52O0VQyiDTo0frC3443m7hriD3gyEre89L2Q5cuP4maHlYSOYpKHxkRhEp";
 
 
     public String getAuthCredentials(){
@@ -135,10 +136,10 @@ public class MainActivity extends AppCompatActivity {
         CustomOAuthToken token = CustomOAuthToken.getInstance();
         try{
             token.setAccess_token(response.getString("access_token"));
-            token.setAccess_token(response.getString("token_type"));
-            token.setAccess_token(response.getString("expires_in"));
-            token.setAccess_token(response.getString("scope"));
-            token.setAccess_token(response.getString("refresh_token"));
+            token.setToken_type(response.getString("token_type"));
+            token.setExpires_in(response.getString("expires_in"));
+            token.setScope(response.getString("scope"));
+            token.setRefresh_token(response.getString("refresh_token"));
         }
         catch (JSONException e){
 
@@ -147,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void authUser(View v){
         // Get a RequestQueue
-        RequestQueue queue = RequestQueueSingleton.getInstance(this.getApplicationContext()).
-                getRequestQueue();
+//        RequestQueue queue = RequestQueueSingleton.getInstance(this.getApplicationContext()).
+//                getRequestQueue();
 
         String url = getPrefixURL() + "o/token/";
 
@@ -179,28 +180,32 @@ public class MainActivity extends AppCompatActivity {
 
     public void testApi(View v) {
         // Get a RequestQueue
-        RequestQueue queue = RequestQueueSingleton.getInstance(this.getApplicationContext()).
-                getRequestQueue();
+//        RequestQueue queue = RequestQueueSingleton.getInstance(this.getApplicationContext()).
+//                getRequestQueue();
 
-        String url ="http://192.168.1.4:8000/restapi/expressions/";
+        String url = getPrefixURL() + "restapi/expressions/";
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
+        Map<String, String> params = new HashMap<>();
+        String oauth_token = CustomOAuthToken.getInstance().getAccess_token();
+
+        CustomVolleyRequestAPI customRequest = new CustomVolleyRequestAPI(
+                Request.Method.GET, url, params, oauth_token,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
-                        // Do something with the response
-                        showResponse("Response", response);
+                    public void onResponse(JSONObject response) {
+                        showResponse("Response: ", response.toString());
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle error
+                    public void onErrorResponse(VolleyError response)
+                    {
+                        showResponse("Response: Error", response.toString());
                     }
-                });
+                }
+        );
 
-        // Add a request (in this example, called stringRequest) to your RequestQueue.
-        RequestQueueSingleton.getInstance(this).addToRequestQueue(stringRequest);
+        RequestQueueSingleton.getInstance(this).addToRequestQueue(customRequest);
     }
 
     public void addExpressionDialog(View v){
