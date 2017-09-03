@@ -147,10 +147,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void authUser(View v){
-        // Get a RequestQueue
-//        RequestQueue queue = RequestQueueSingleton.getInstance(this.getApplicationContext()).
-//                getRequestQueue();
-
         String url = getPrefixURL() + "o/token/";
 
         Map<String, String> params = new HashMap<>();
